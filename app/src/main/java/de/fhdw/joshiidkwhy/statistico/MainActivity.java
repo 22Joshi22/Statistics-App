@@ -13,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private void openFilePicker() {
         // Create an intent to open the file picker
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("text/*"); // Adjust MIME type for your file type (e.g., "text/csv" for CSV files)
+        intent.setType("text/*"); // Adjust MIME type for CSV files
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_CODE_FILE_PICKER);
     }
@@ -55,27 +56,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readFile(Uri uri) {
-        String[] collum_name;
         try (InputStream inputStream = getContentResolver().openInputStream(uri);
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
-            StringBuilder stringBuilder = new StringBuilder();
             String line;
+            List<String[]> rows = new ArrayList<>();
+            int rowCount = 0;
 
-            int counter = 0;
             while ((line = reader.readLine()) != null) {
-                if (counter == 0) {
-                    title = line.split(";"); // Split the first line by ";"
-                }
-                if (counter != 0){
-
-                }
-                counter++;
+                String[] row = line.split(";");
+                rows.add(row);
+                rowCount++;
             }
-            //stringBuilder.append(line).append("\n"); // Append lines if needed
 
-            // Display the file content in the TextView
-            dataTextView.setText(stringBuilder.toString());
+            if (!rows.isEmpty()) {
+                // Generate stats
+                String stats = generateStats(rows);
+                dataTextView.setText(stats);
+            } else {
+                dataTextView.setText("No data found in the file.");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,4 +83,40 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private String generateStats(List<String[]> rows) {
+        StringBuilder statsBuilder = new StringBuilder();
+
+        // Assuming the first row contains column names
+        String[] columnNames = rows.get(0);
+        int columnCount = columnNames.length;
+
+        statsBuilder.append("File Stats:\n");
+        statsBuilder.append("Total Rows: ").append(rows.size() - 1).append("\n"); // Exclude header row
+        statsBuilder.append("Columns:\n");
+
+        for (int i = 0; i < columnCount; i++) {
+            List<Double> columnValues = new ArrayList<>();
+            for (int j = 1; j < rows.size(); j++) { // Skip header row
+                try {
+                    columnValues.add(Double.parseDouble(rows.get(j)[i]));
+                } catch (NumberFormatException ignored) {
+                    // Ignore non-numeric values
+                }
+            }
+
+            double mean = calculateMean(columnValues);
+            statsBuilder.append(columnNames[i]).append(" -> Mean: ").append(mean).append("\n");
+        }
+
+        return statsBuilder.toString();
+    }
+
+    private double calculateMean(List<Double> values) {
+        if (values.isEmpty()) return 0;
+        double sum = 0;
+        for (double value : values) {
+            sum += value;
+        }
+        return sum / values.size();
+    }
 }
