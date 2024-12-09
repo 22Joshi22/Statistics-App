@@ -3,6 +3,7 @@ package de.fhdw.joshiidkwhy.statistico;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         statsBuilder.append("Columns:\n");
 
         for (int i = 0; i < columnCount; i++) {
-            List<Double> columnValues = new ArrayList<>();
+            List<Object> columnValues = new ArrayList<>();
             for (int j = 1; j < rows.size(); j++) { // Skip header row
                 try {
                     columnValues.add(Double.parseDouble(rows.get(j)[i]));
@@ -104,18 +106,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            double mean = calculateMean(columnValues);
-            statsBuilder.append(columnNames[i]).append(" -> Mean: ").append(mean).append("\n");
+            Object average = calculateAverage(columnValues);
+
+            if (average instanceof Double){
+                statsBuilder.append(columnNames[i]).append(" -> Average: ").append(average).append("\n");
+            }else {
+                statsBuilder.append(columnNames[i]).append(" -> " + average).append("\n");
+            }
+
         }
 
         return statsBuilder.toString();
     }
 
-    private double calculateMean(List<Double> values) {
-        if (values.isEmpty()) return 0;
-        double sum = 0;
-        for (double value : values) {
-            sum += value;
+    private Object calculateAverage(List<Object> values) {
+        if (values.isEmpty()) return "Wrong Data Type";
+        double sum = 0.0;
+        for (Object value : values) {
+            if (value instanceof Double) {
+                sum += (Double)value;
+            }
         }
         return sum / values.size();
     }
