@@ -6,25 +6,25 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ResultsActivity extends AppCompatActivity {
+public class ResultActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_results);
+        setContentView(R.layout.activity_result);
 
-        // UI-Element initialisieren
-        TextView resultsTextView = findViewById(R.id.resultsTextView);
+        // UI-Element für die Ergebnisse
+        TextView resultTextView = findViewById(R.id.resultTextView);
 
-        // Ergebnisse aus dem Intent empfangen
+        // Hole die Ergebnisse aus dem Intent
         Intent intent = getIntent();
         String results = intent.getStringExtra("RESULTS");
 
         // Ergebnisse anzeigen
         if (results != null) {
-            resultsTextView.setText(results);
+            resultTextView.setText(results);
         } else {
-            resultsTextView.setText("No results to display.");
+            resultTextView.setText("No results available.");
         }
     }
 }

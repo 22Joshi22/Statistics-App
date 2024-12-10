@@ -107,17 +107,21 @@ public class MainActivity extends AppCompatActivity {
         StringBuilder results = new StringBuilder();
 
         if (mCheckboxMean.isChecked()) {
-            results.append("Mean:\n").append(calculator.calculateMean()).append("\n");
+            results.append("Mean:\n").append(calculator.calculateMean()).append("\n\n");
         }
         if (mCheckboxMedian.isChecked()) {
-            results.append("Median:\n").append(calculator.calculateMedian()).append("\n");
+            results.append("Median:\n").append(calculator.calculateMedian()).append("\n\n");
         }
         if (mCheckboxQuartiles.isChecked()) {
-            results.append("Quartiles:\n").append(calculator.calculateQuartiles()).append("\n");
+            results.append("Quartiles:\n").append(calculator.calculateQuartiles()).append("\n\n");
         }
 
-        mResultTextView.setText(results.toString());
+        // Starte die ResultActivity und übergebe die Ergebnisse
+        Intent resultIntent = new Intent(this, ResultActivity.class);
+        resultIntent.putExtra("RESULTS", results.toString());
+        startActivity(resultIntent);
     }
+
 
     // Speichere die Daten, bevor die Aktivität zerstört wird
     @Override

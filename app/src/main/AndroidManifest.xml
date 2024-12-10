@@ -40,6 +40,12 @@
                 android:exported="true">
         </activity>
 
+        <!-- ResultActivity -->
+        <activity
+                android:name=".ResultActivity"
+                android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>
