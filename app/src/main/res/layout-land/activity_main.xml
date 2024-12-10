@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+    <!-- Linker Bereich: Daten und Optionen -->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingEnd="8dp">
+
+        <!-- Datei laden Button -->
+        <Button
+                android:id="@+id/buttonLoadFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Load File" />
+
+        <!-- Bereich zum Anzeigen der geladenen Daten -->
+        <TextView
+                android:id="@+id/dataTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:background="#EEEEEE"
+                android:padding="8dp"
+                android:scrollbars="vertical"
+                android:text="No data loaded"
+                android:textSize="14sp" />
+
+        <!-- Checkboxen für Statistik-Optionen -->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp">
+
+            <CheckBox
+                    android:id="@+id/checkboxMean"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Arithmetic Mean" />
+
+            <CheckBox
+                    android:id="@+id/checkboxMedian"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Median" />
+
+            <CheckBox
+                    android:id="@+id/checkboxQuartiles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quartiles (Q1, Q3)" />
+        </LinearLayout>
+
+        <!-- Statistik berechnen Button -->
+        <Button
+                android:id="@+id/buttonCalculate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Calculate Statistics"
+                android:layout_marginTop="16dp" />
+    </LinearLayout>
+
+    <!-- Rechter Bereich: Ergebnisse -->
+    <TextView
+            android:id="@+id/resultTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#DDDDDD"
+            android:padding="8dp"
+            android:text="Results will be displayed here"
+            android:textSize="14sp" />
+</LinearLayout>

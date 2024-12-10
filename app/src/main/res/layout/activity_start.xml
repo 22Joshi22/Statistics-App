@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="16dp">
+
+    <Button
+            android:id="@+id/buttonLoadFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Load File" />
+
+    <Button
+            android:id="@+id/buttonManualEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Manual Entry" />
+</LinearLayout>
