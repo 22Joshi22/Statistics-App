@@ -6,17 +6,24 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+    <!-- Multi-line EditText for manual data entry -->
     <EditText
             android:id="@+id/editTextDataInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter numbers separated by commas (e.g., 1, 2, 3)"
-            android:inputType="text" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:hint="Enter rows separated by semicolons (e.g., 1,2,3;4,5,6;)"
+            android:inputType="textMultiLine"
+            android:gravity="start|top"
+            android:scrollbars="vertical"
+            android:padding="8dp"
+            android:background="@android:drawable/edit_text" />
 
+    <!-- Button to pass the data -->
     <Button
-            android:id="@+id/buttonCalculateManual"
+            android:id="@+id/buttonPassData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Calculate" />
+            android:text="Save and Pass Data" />
 </LinearLayout>

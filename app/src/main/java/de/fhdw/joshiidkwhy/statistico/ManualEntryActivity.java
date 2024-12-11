@@ -1,6 +1,7 @@
 package de.fhdw.joshiidkwhy.statistico;
 
-import de.fhdw.joshiidkwhy.statistico.R;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,84 +9,59 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class ManualEntryActivity extends AppCompatActivity {
 
     private EditText mDataInput;
-    private Button mCalculateButton;
+    private Button mPassDataButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manual_entry);
 
-        // UI-Elemente initialisieren
+        // Initialize UI elements
         mDataInput = findViewById(R.id.editTextDataInput);
-        mCalculateButton = findViewById(R.id.buttonCalculateManual);
+        mPassDataButton = findViewById(R.id.buttonPassData);
 
-        mCalculateButton.setOnClickListener(v -> {
-            String input = mDataInput.getText().toString();
+        mPassDataButton.setOnClickListener(v -> {
+            String input = mDataInput.getText().toString().trim();
             if (input.isEmpty()) {
                 Toast.makeText(this, "Please enter data.", Toast.LENGTH_SHORT).show();
+            } else if (!input.matches("^(\\d+(,\\d+)*;?)+$")) {
+                Toast.makeText(this, "Invalid format. Use numbers separated by commas and rows separated by semicolons.", Toast.LENGTH_SHORT).show();
             } else {
-                // Daten in eine Liste konvertieren
-                List<Double> numericValues = parseInput(input);
-                if (numericValues.isEmpty()) {
-                    Toast.makeText(this, "Invalid data format.", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Statistiken berechnen
-                    String result = calculateStatistics(numericValues);
-                    Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                try {
+                    // Save input data to a CSV file
+                    File csvFile = saveDataToCsv(input);
+
+                    // Pass the CSV file URI to MainActivity
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtra("FILE_URI", Uri.fromFile(csvFile).toString());
+                    startActivity(intent);
+                } catch (IOException e) {
+                    Toast.makeText(this, "Error saving data to CSV file.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
             }
         });
     }
 
-    private List<Double> parseInput(String input) {
-        List<Double> numericValues = new ArrayList<>();
-        try {
-            String[] parts = input.split(",");
-            for (String part : parts) {
-                numericValues.add(Double.parseDouble(part.trim()));
+    private File saveDataToCsv(String data) throws IOException {
+        // Create a temporary CSV file in the cache directory
+        File csvFile = new File(getCacheDir(), "manual_input_data.csv");
+
+        // Write the input to the CSV file
+        try (FileWriter writer = new FileWriter(csvFile)) {
+            String[] rows = data.split(";"); // Split input into rows by semicolon
+            for (String row : rows) {
+                writer.write(row.replace(",", ";") + "\n"); // Write each row into the CSV file
             }
-        } catch (NumberFormatException e) {
-            numericValues.clear(); // Ungültige Eingabe
         }
-        return numericValues;
-    }
 
-    private String calculateStatistics(List<Double> values) {
-        double mean = calculateMean(values);
-        double median = calculateMedian(values);
-        double q1 = calculateQuartile(values, 25);
-        double q3 = calculateQuartile(values, 75);
-
-        return "Mean: " + mean + "\nMedian: " + median + "\nQ1: " + q1 + "\nQ3: " + q3;
-    }
-
-    private double calculateMean(List<Double> values) {
-        double sum = 0.0;
-        for (double value : values) {
-            sum += value;
-        }
-        return sum / values.size();
-    }
-
-    private double calculateMedian(List<Double> values) {
-        values.sort(Double::compareTo);
-        int middle = values.size() / 2;
-        if (values.size() % 2 == 0) {
-            return (values.get(middle - 1) + values.get(middle)) / 2.0;
-        } else {
-            return values.get(middle);
-        }
-    }
-
-    private double calculateQuartile(List<Double> values, int percentile) {
-        values.sort(Double::compareTo);
-        int index = (int) Math.ceil(percentile / 100.0 * values.size()) - 1;
-        return values.get(Math.max(index, 0));
+        return csvFile;
     }
 }
