@@ -8,12 +8,11 @@ public class StatisticsCalculator {
 
     private final List<Double> data;
 
-    // Konstruktor, um die Daten zu initialisieren
     public StatisticsCalculator(List<String[]> loadedData) {
         this.data = parseData(loadedData);
     }
 
-    // Daten in Double-Werte umwandeln
+    // Convert to Double
     private List<Double> parseData(List<String[]> loadedData) {
         List<Double> parsedData = new ArrayList<>();
         for (String[] row : loadedData) {
@@ -21,14 +20,14 @@ public class StatisticsCalculator {
                 try {
                     parsedData.add(Double.parseDouble(value));
                 } catch (NumberFormatException e) {
-                    // Ignoriere ungültige Werte
+                    // Ignore nonappliccable Values
                 }
             }
         }
         return parsedData;
     }
 
-    // Mittelwert berechnen
+    // Calculate Mittelwert
     public double calculateMean() {
         if (data.isEmpty()) {
             throw new IllegalStateException("No data available to calculate mean.");
@@ -40,7 +39,7 @@ public class StatisticsCalculator {
         return sum / data.size();
     }
 
-    // Median berechnen
+    // Calculate Median
     public double calculateMedian() {
         if (data.isEmpty()) {
             throw new IllegalStateException("No data available to calculate median.");
@@ -55,7 +54,7 @@ public class StatisticsCalculator {
         }
     }
 
-    // Quartile berechnen
+    // Calculate Quartile
     public String calculateQuartiles() {
         if (data.isEmpty()) {
             throw new IllegalStateException("No data available to calculate quartiles.");
@@ -70,7 +69,7 @@ public class StatisticsCalculator {
         return "Q1: " + q1 + ", Q2: " + q2 + ", Q3: " + q3;
     }
 
-    // Hilfsmethode zur Berechnung eines Perzentils
+    // Calculate Percentil
     private double calculatePercentile(List<Double> sortedData, double percentile) {
         int n = sortedData.size();
         double rank = percentile / 100.0 * (n - 1);

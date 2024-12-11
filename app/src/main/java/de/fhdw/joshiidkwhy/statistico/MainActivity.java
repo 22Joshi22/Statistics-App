@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // UI-Elemente initialisieren
+        // Initialize UI elements
         Button loadFileButton = findViewById(R.id.buttonLoadFile);
         Button calculateButton = findViewById(R.id.buttonCalculate);
         mDataTextView = findViewById(R.id.dataTextView);
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         mCheckboxMedian = findViewById(R.id.checkboxMedian);
         mCheckboxQuartiles = findViewById(R.id.checkboxQuartiles);
 
-        // Datei laden, falls URI übergeben wurde
+        // Load Data if URI is passed
         Intent intent = getIntent();
         String fileUriString = intent.getStringExtra("FILE_URI");
         if (fileUriString != null) {
@@ -49,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
             loadFile(fileUri);
         }
 
-        // Event Listener für den File Picker Button
+        // Event Listener File Picker Button
         loadFileButton.setOnClickListener(v -> openFilePicker());
 
-        // Event Listener für den Berechnen-Button
+        // Event Listener Calculate-Button
         calculateButton.setOnClickListener(v -> calculateStats());
 
-        // Wiederherstellung der Instanzdaten
+        // Restore Instance (Layout ist noch nicht perfekt)
         if (savedInstanceState != null) {
             mLoadedData = (List<String[]>) savedInstanceState.getSerializable("LOADED_DATA");
             String resultText = savedInstanceState.getString("RESULT_TEXT", "");
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Ergebnisse berechnen
+        // Calculate Answer
         StatisticsCalculator calculator = new StatisticsCalculator(mLoadedData);
         StringBuilder results = new StringBuilder();
 
@@ -116,24 +116,24 @@ public class MainActivity extends AppCompatActivity {
             results.append("Quartiles:\n").append(calculator.calculateQuartiles()).append("\n\n");
         }
 
-        // Starte die ResultActivity und übergebe die Ergebnisse
+        // Start Result Activity to Transfer Solutions
         Intent resultIntent = new Intent(this, ResultActivity.class);
         resultIntent.putExtra("RESULTS", results.toString());
         startActivity(resultIntent);
     }
 
 
-    // Speichere die Daten, bevor die Aktivität zerstört wird
+    // SSave File on Activity Exit
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Speichere die geladenen Daten
+        // Sava loaded Data
         if (mLoadedData != null) {
             outState.putSerializable("LOADED_DATA", (Serializable) mLoadedData);
         }
 
-        // Speichere das Ergebnis
+        // Save Final Data
         outState.putString("RESULT_TEXT", mResultTextView.getText().toString());
     }
 }

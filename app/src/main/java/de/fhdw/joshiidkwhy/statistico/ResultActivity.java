@@ -12,15 +12,12 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-
-        // UI-Element für die Ergebnisse
         TextView resultTextView = findViewById(R.id.resultTextView);
 
-        // Hole die Ergebnisse aus dem Intent
+        // Get from intent
         Intent intent = getIntent();
         String results = intent.getStringExtra("RESULTS");
 
-        // Ergebnisse anzeigen
         if (results != null) {
             resultTextView.setText(results);
         } else {
